@@ -129,9 +129,10 @@ def positions_editor(tab_name: str, label: str):
                 )
                 combined = returns.chain_link_backtest(backtest_index_values, live_index)
                 
-                # FIX: Drop duplicates in combined before proceeding
+                # FIX: Drop duplicates AND remove any dates after the Rebalance Date
                 if not combined.empty:
                     combined = combined[~combined.index.duplicated(keep='last')]
+                    combined = combined[combined.index <= rebal_date]
                     
                 if combined.empty:
                     st.warning("Could not compute combined index.")
